@@ -12,7 +12,7 @@
 [![Forks](https://img.shields.io/github/forks/ARCANGEL0/NekoCLI?style=for-the-badge&color=353535)](https://github.com/ARCANGEL0/NekoCLI/fork)
 [![Repo Views](https://komarev.com/ghpvc/?username=NekoCLI&color=353535&style=for-the-badge&label=REPO%20VIEWS)](https://github.com/ARCANGEL0/NekoCLI)
 [![AI](https://img.shields.io/badge/AI-Powered-cyan.svg?style=for-the-badge)](#)
-![Version](https://img.shields.io/badge/version-5.1-blue?style=for-the-badge&color=00aacc)
+![Version](https://img.shields.io/badge/version-5.2-blue?style=for-the-badge&color=00aacc)
 
 ![GitHub issues](https://img.shields.io/github/issues/ARCANGEL0/NekoCLI?style=for-the-badge&color=3f3972)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/ARCANGEL0/NekoCLI?style=for-the-badge&color=3f3972)
@@ -34,7 +34,7 @@ It supports multiple flags and modes with a tidy formatted and colourful output 
 - **Multiple Modes** – Generic AI chat with GPT5 + Web search and Real time content, shell commands and execution, code generation & save to file, image analysis, pentest mode with interactive and autonomous execution.
 - **Formatted output** – Easy visualization data on terminal, outputs are displayed in colorful colorama boxes.
 - **Persistent History** – Keeps context of chat if used with persistence flags. Chat history is saved in ~/.config/nekocli/chats.json
-- **Free endpoint using G4F.dev or Ollama** – All the AI logic is run with GPT 5.1 through G4F.dev providers, alternatively ollama can be used for offline mode, change base api of *:11434 by editing the OLLAMA_BASE_URL.
+- **Free endpoint using G4F.dev or Ollama** – All the AI logic is run with GPT 5 through G4F.dev providers, alternatively ollama can be used for offline mode, change base api of *:11434 by editing the OLLAMA_BASE_URL.
 - **Media file handling** - Neko can not only visualize images, but also generate videos & images and edit them based on user's prompt.
 ---
 
@@ -75,6 +75,7 @@ Usage: neko [options] {question or prompt}
 | `-x` / `--agent` | Starts neko in cybersecurity agent mode, handling security, pentest questions and giving advices on command outputs |
 | `-r` / `--reset` | Erases chat history saved on ~/.config/nekocli |
 | `-h` / `--help` | Displays the help menu |
+| `-u` / `--update` | Updates Neko |
 | `-v` / `--version` | Displays current version |
 
 ### ⑇ Examples
@@ -91,7 +92,7 @@ $ neko -i "Tell me about Rutherford atom model" # after output, you will have op
 $ neko -x "i need help to enumerate 192.168.0.10 for open ports" # neko will return a small and a list of commands to be run by user, and ask them to retrieve the logs by calling command again, as in example below
 $ cat nmapOutput.txt | neko -x "i have run nmap and found these info, what do you suggest now?" # Continues conversation saved on chat.json, analyzes nmap output and proceeds to suggest next steps
 $ neko -r # resets all chat history.
-$ neko --version # Outputs v5.1 🐈
+$ neko --version # Outputs v5.2 🐈
 ```
 
 

@@ -12,7 +12,7 @@
 #░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓████████▓▒░▒▓████████▓▒░▒▓██████▓▒░
 # ----------------------------------------------------------------------------------
 #
-# Version 5.1
+# Version 5.2
 
 
 # ===================== AUTO INSTALL PKGS handler  =====================
@@ -237,7 +237,7 @@ $ cat logs.txt | neko analyze these logs.
 
 init(autoreset=True)
 #### GENERAL CONFIGURATION
-VERSION = "5.1"
+VERSION = "5.2"
 NEKO_BINARY = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/neko"
 VERSION_URL = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/version.txt"
 API_OLLAMA_URL = "http://localhost:11434"
