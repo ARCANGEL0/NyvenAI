@@ -238,8 +238,8 @@ $ cat logs.txt | neko analyze these logs.
 init(autoreset=True)
 #### GENERAL CONFIGURATION
 VERSION = "5.1"
-NEKO_BINARY = "https://cdn.jsdelivr.net/gh/ARCANGEL0/nekoCLI@main/neko"
-VERSION_URL = "https://cdn.jsdelivr.net/gh/ARCANGEL0/nekoCLI@main/version.txt"
+NEKO_BINARY = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/neko"
+VERSION_URL = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/version.txt"
 API_OLLAMA_URL = "http://localhost:11434"
 VIDEO_URL = "https://api.arcangelo.net/createVideo"
 PENTEST_URL = "https://api.arcangelo.net/neko_agent"
