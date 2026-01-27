@@ -1208,6 +1208,7 @@ def pentest_call(messages):
             except (requests.RequestException, json.JSONDecodeError):
                 time.sleep(1)
                 continue
+                
         if resp is None or attempt == MAX_RETRIES - 1:
             return None
         lower_resp = resp.lower()
