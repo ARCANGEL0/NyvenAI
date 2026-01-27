@@ -1040,7 +1040,7 @@ def getReply(sys,messages):
 def vision(payload, image_url):
 
     api_data = {
-        "messages": payload
+        "messages": payload,
         "link": link
     }
 
@@ -1202,13 +1202,14 @@ def pentest_call(messages):
                         resp = "[ <!> No response detected ]"
                     if resp != "[ <!> No response detected ]":
                         break
-
                 except (requests.RequestException, json.JSONDecodeError):
                     time.sleep(1)
                     continue
-
-                if resp is None or attempt == MAX_RETRIES - 1:
-                    return None
+            except (requests.RequestException, json.JSONDecodeError):
+                time.sleep(1)
+                continue
+        if resp is None or attempt == MAX_RETRIES - 1:
+            return None
         lower_resp = resp.lower()
         if any(word in lower_resp for word in ["sorry", "apologize", "apologies", "regret"]):
             continue
