@@ -12,7 +12,7 @@
 #░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓████████▓▒░▒▓████████▓▒░▒▓██████▓▒░
 # ----------------------------------------------------------------------------------
 #
-# Version 4.8.1
+# Version 5.1
 
 
 # ===================== AUTO INSTALL PKGS handler  =====================
@@ -237,7 +237,7 @@ $ cat logs.txt | neko analyze these logs.
 
 init(autoreset=True)
 #### GENERAL CONFIGURATION
-VERSION = "4.8.1"
+VERSION = "5.1"
 NEKO_BINARY = "https://cdn.jsdelivr.net/gh/ARCANGEL0/nekoCLI@main/neko"
 VERSION_URL = "https://cdn.jsdelivr.net/gh/ARCANGEL0/nekoCLI@main/version.txt"
 API_OLLAMA_URL = "http://localhost:11434"
@@ -883,7 +883,7 @@ def genVideo(prompt: str) -> str:
         ))
         print("\n")
         sys.exit(1)
-    video = data["data"][0]["url"]
+    video = data["response"]
     wrdx = re.findall(r"[a-zA-Z0-9]+", prompt.lower())
     newname = "_".join(wrdx[:6])
     filename = f"{newname}.mp4"
@@ -957,19 +957,26 @@ def editImage(image_path: str, prompt: str) -> str:
             f.write(chunk)
 
     return edited_image_path
+
 def genImage(prompt: str) -> str:
     os.makedirs(IMAGES_DIR, exist_ok=True)
+    payload = {"prompt": prompt}
+    while True:
+        try:
+            response = requests.post(
+                IMAGEGEN_URL,
+                json=payload,
+                headers={"Content-Type": "application/json"},
+                timeout=None
+            )
+            response.raise_for_status()
+            data = response.json()
+            break
+        except requests.exceptions.ChunkedEncodingError:
+            print("[!] Connection closed prematurely, retrying...")
+        except requests.exceptions.RequestException as e:
+            print(f"[!] Request failed, retrying... {e}")
 
-    payload = {
-        "prompt": prompt,
-     }
-    response = requests.post(
-        IMAGEGEN_URL,
-        headers={"Content-Type": "application/json"},
-        json=payload,
-    )
-    response.raise_for_status()
-    data = response.json()
     url = data["response"]
     response = requests.get(url, timeout=120)
     response.raise_for_status()
@@ -1208,7 +1215,7 @@ def pentest_call(messages):
             except (requests.RequestException, json.JSONDecodeError):
                 time.sleep(1)
                 continue
-                
+
         if resp is None or attempt == MAX_RETRIES - 1:
             return None
         lower_resp = resp.lower()
