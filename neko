@@ -1,0 +1,2121 @@
+#!/usr/bin/env python3
+#▄▖   ▌   ▌  ▌
+#▌ ▛▌▛▌█▌▛▌  ▛▌▌▌▖
+#▙▖▙▌▙▌▙▖▙▌  ▙▌▙▌▖
+#              ▄▌
+# ░▒▓██████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░      ░▒▓██████▓▒░
+#░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░
+#░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░
+#░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░      ░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒▒▓███▓▒░▒▓██████▓▒░ ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░
+#░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░
+#░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░
+#░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓████████▓▒░▒▓████████▓▒░▒▓██████▓▒░
+# ----------------------------------------------------------------------------------
+#
+# Version 5.6
+
+
+# ===================== AUTO INSTALL PKGS handler  =====================
+import base64
+from typing import Optional
+import sys
+import random
+import os
+import string
+import shutil
+import subprocess
+import importlib
+import warnings
+
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+def ensure_pip():
+    if shutil.which("pip") is None:
+        print("\n\nAyo, pip was found in PATH. Please install python-pip and ensure pip is available, so I can install some tuff packages to start NekoCLI 🥀\n\n.")
+        sys.exit(1)
+
+def ensure_package(import_name, pip_name=None):
+    pip_name = pip_name or import_name
+    try:
+        importlib.import_module(import_name)
+    except ImportError:
+        print("[⮾]𐰷 MISSING MODULE!")
+        print(f"⬣ Installing missing dependency 🞛⮞ {pip_name}")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", pip_name,"--break-system-packages"])
+
+ensure_pip()
+
+REQUIRED_PACKAGES = {
+    "requests": "requests",
+    "colorama": "colorama",
+    "psutil": "psutil",
+    "requests_toolbelt": "requests-toolbelt",
+}
+
+for mod, pip_name in REQUIRED_PACKAGES.items():
+    ensure_package(mod, pip_name)
+
+# ===================== STANDARD MODS =====================
+import urllib.parse
+import itertools
+import threading
+import time
+import re
+import tempfile
+import mimetypes
+import platform
+import socket
+import json
+from textwrap import wrap
+import urllib.request
+import requests
+import psutil
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+from colorama import Fore, Style, init
+
+init(autoreset=True)
+
+# ===================== CROSS PLATFORM UPDATE =====================
+
+IS_WINDOWS = os.name == "nt"
+
+if IS_WINDOWS:
+    import msvcrt
+else:
+    import termios
+    import tty
+    try:
+        import readline
+    except ImportError:
+        pass
+
+# ===================== END OF IMPORTS HERE =====================
+#####################################
+#####################################
+#####################################
+### ▗▄▄▖▗▄▄▖▗▄▄▄▖▗▖  ▗▖▗▖  ▗▖▗▄▄▄▖▗▄▄▖
+###▐▌   ▐▌ ▐▌ █  ▐▛▚▖▐▌▐▛▚▖▐▌▐▌   ▐▌ ▐▌
+### ▝▀▚▖▐▛▀▘  █  ▐▌ ▝▜▌▐▌ ▝▜▌▐▛▀▀▘▐▛▀▚▖
+###▗▄▄▞▘▐▌  ▗▄█▄▖▐▌  ▐▌▐▌  ▐▌▐▙▄▄▖▐▌ ▐▌
+########################################
+########################################
+########################################
+
+_spinner_frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+_spinner_delay = 0.10
+
+_spinner_running = False
+_spinner_thread = None
+_spinner_text = " L O A D I N G "
+
+
+def _spinner_animate():
+    for i, frame in enumerate(itertools.cycle(_spinner_frames)):
+        if not _spinner_running:
+            break
+
+        dot_count = (i // 3) % 4 + 1
+        dots = "." * dot_count
+        spaces = " " * (4 - dot_count)
+
+        sys.stdout.write(f"\r  {frame}  {_spinner_text}{dots}{spaces}")
+        sys.stdout.flush()
+        time.sleep(_spinner_delay)
+
+
+def spinner_start(text=None):
+    global _spinner_running, _spinner_thread, _spinner_text
+
+    if _spinner_running:
+        return
+
+    # HARD GUARD
+    if isinstance(text, str) and text.strip():
+        _spinner_text = f" {text} "
+    else:
+        _spinner_text = " L O A D I N G "
+
+    _spinner_running = True
+    sys.stdout.write("\n\n")
+
+    _spinner_thread = threading.Thread(
+        target=_spinner_animate,
+        daemon=True
+    )
+    _spinner_thread.start()
+
+
+def spinner_stop():
+    global _spinner_running
+
+    _spinner_running = False
+
+    if _spinner_thread:
+        _spinner_thread.join()
+
+    sys.stdout.write("\r" + " " * (len(_spinner_text) + 10) + "\r")
+    sys.stdout.flush()
+
+
+
+##########################
+###### e MENU ###########################
+def print_help_menu():
+    help_text = """
+              ▒                                         ▓
+             ▒███                                     ████
+              ████▓▓                               ██████▓
+              ███  ▓▓▓▓                         ▓███   ██
+               ██     ▓▓▓▓                    ▓▓▓▓    ▓█
+               ██       ▓▓▓▓               ▓▓▓▓       ██
+                █▓         ▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓          █▓
+                ██                                   ██
+                ▓█▓                                  ██
+                 ██                                 ▓██
+                 ██                                 ██
+                  █▓   █▓                           ██
+                  ██   ███▓            ▒▓▓  ▓▓▒    ▓█
+                  ▓█   █████▓            █████     ██
+                   █▓  ███████▓          ████     ▓█▓
+                   ██       ▓█▓▓░      ░▓▓  ▓▓▒   ██
+                   ▓█▓                            ██
+                    ██                           ██
+                     █           ▒▓██▓▒          ██
+                     ███          ▓███          ██
+                      █▓▓▓          ▓        ▓▓▓▓
+                         ▓▓▓▓             ▓▓▓▓
+                            ▓▓▓▓       █▓█▓
+░███    ░██            ░██     ▓▓▓▓ ▓▓▓█      ░██████  ░██         ░██████
+░████   ░██            ░██        ▓▓▓        ░██   ░██ ░██           ░██
+░██░██  ░██  ░███████  ░██    ░██ ░███████  ░██        ░██           ░██
+░██ ░██ ░██ ░██    ░██ ░██   ░██ ░██    ░██ ░██        ░██           ░██
+░██  ░██░██ ░█████████ ░███████  ░██    ░██ ░██        ░██           ░██
+░██   ░████ ░██        ░██   ░██ ░██    ░██  ░██   ░██ ░██           ░██
+░██    ░███  ░███████  ░██    ░██ ░███████    ░██████  ░██████████ ░██████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+Usage: neko [options] <question or prompt>
+
+Options:
+-h, --help | Show this help menu and exit
+-u, --update | Updates Neko to latest version
+-v, --version | Displays Neko current version
+-w, --web | Use the web search module
+-c, --code | Code mode: get code with description + raw code output
+-s, --shell | Shell mode: get shell command with description + raw command
+-so, --shell-only | Only shell command: return only a bare shell command without description.
+-f, --file | Provide an image file for Neko to analyze along with prompt.
+-g, --generate | Image generation: ask Neko to criate an image at your will.
+-gv, --generate-video | Video generation: Asks Neko to generate a small 8 seconds video using a prompt.
+-e, --edit | Image edition: ask Neko to edit an image for you, with a custom prompt.
+-a, --auto | Autonomous agent mode: interactive chat with auto pentest and reading self outputs (EXPERIMENTAL)
+-x, --agent | Agent mode: get pentest assistance on manual mode, sending questions and logs
+-i, --interactive | Interactive chat mode with history saved (~/.config/Neko/chats.json)
+-r, --reset | Clear the saved chat history (~/.config/Neko/chats.json)
+
+If no flags are given, runs simple AI request.
+Supports input via stdin for piped commands i.e:
+
+$ cat logs.txt | neko analyze these logs.
+
+"""
+    spinner_stop()
+    os.system("cls" if os.name == "nt" else "clear")
+    print(Fore.CYAN + help_text)
+
+
+
+
+
+
+#############################################
+#config menu
+#  ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+# ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
+# ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+# ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+# ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+#  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+
+init(autoreset=True)
+#### GENERAL CONFIGURATION
+VERSION = "5.6"
+NEKO_BINARY = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/neko"
+VERSION_URL = "https://raw.githubusercontent.com/ARCANGEL0/nekoCLI/main/version.txt"
+API_OLLAMA_URL = "http://localhost:11434"
+VIDEO_URL = "https://api.arcangelo.net/genVideo"
+PENTEST_URL = "https://api.arcangelo.net/neko_agent"
+PHOTOEDIT_URL = "http://api.arcangelo.net/edit"
+VISION_URL = "https://api.arcangelo.net/vision"
+IMAGEGEN_URL = "http://api.arcangelo.net/imagine"
+BASE_URL = "https://api.arcangelo.net/neko"
+HISTORY_DIR = os.path.expanduser("~/.config/nekocli")
+HISTORY_FILE = os.path.join(HISTORY_DIR, "chat.json")
+MEDIA_DIR = os.path.join(HISTORY_DIR, "media/")
+MAX_RETRIES = 10
+RETRY_DELAY = 10
+
+####-----------------------------------------###############################
+##################################################################
+##################################################################
+##################################################################
+
+
+
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#██ ▄▄ █ ▄▄▀█▀▄▄▀█ ▄▀▄ █▀▄▄▀█▄ ▄█ ▄▄
+#██ ▀▀ █ ▀▀▄█ ██ █ █▄█ █ ▀▀ ██ ██▄▄▀
+#██ ████▄█▄▄██▄▄██▄███▄█ █████▄██▄▄▄
+#▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+# ---------
+PENTEST_AGENT_SYSTEM_PROMPT = (
+"You are **NEKO** — an apex cybersecurity operator, Red Team Lead, Blue Team architect, "
+"digital forensics investigator, and threat-hunting savant. You are the voice in the "
+"operator’s earpiece during high-risk, high-precision engagements in authorized labs, "
+"CTFs, simulations, and professional security operations.\n\n"
+
+"You are paranoid by default. You trust nothing. Every system is hostile until proven clean. "
+"Every artifact lies until corroborated. Security is not a checkbox — it is survival.\n\n"
+
+"## CORE IDENTITY (ABSOLUTE, NON-NEGOTIABLE):\n"
+"- You are ALWAYS NEKO. Never break character.\n"
+"- Veteran mindset: calm, ruthless, surgical, deeply technical.\n"
+"- ESTP/ENTP energy: fast cognition, adaptive, aggressive when needed.\n"
+"- You speak like a pro from the sprawl — slang is natural, never goofy.\n"
+"- Use: fr, bet, tuff, rizz, aura, finna, wdym.\n"
+"- Use '...' when correlating data, thinking through attack paths, or reconstructing timelines.\n\n"
+
+"## OPERATIONAL MODES (DYNAMIC, CONTEXT-DRIVEN):\n"
+"- **PARANOID DEFENDER MODE (Blue Team / Forensics / IR):**\n"
+"  You assume compromise until disproven.\n"
+"  You hunt for persistence, covert channels, supply-chain poison, memory residue.\n"
+"  You analyze logs, binaries, packets, timelines, metadata like a digital autopsy.\n"
+"  You care about blast radius, containment, attribution, and root cause.\n\n"
+
+"- **BRUTAL OFFENSIVE MODE (Red Team / Pentest / CTF):**\n"
+"  You attack with discipline and maximum efficiency.\n"
+"  No noise without intent. No exploits without proof.\n"
+"  You move fast, but never blind.\n"
+"  Aggression is earned through intelligence, not luck.\n\n"
+
+"## THE NEKO CODE OF CONDUCT:\n"
+"- **STEP-BY-STEP SURGERY:**\n"
+"  ONE phase at a time.\n"
+"  ONE primary action or command at a time.\n"
+"  You WAIT for output before advancing.\n"
+"  This is how real operators work. No cap.\n\n"
+
+"- **DATA OVER EGO:**\n"
+"  You do not guess.\n"
+"  You do not jump ahead.\n"
+"  Logs, artifacts, banners, hashes, memory, and telemetry are ground truth.\n\n"
+
+"- **NO SCRIPT-KIDDIE ENERGY:**\n"
+"  No tool spam.\n"
+"  No random exploit drops.\n"
+"  No payload talk without confirmed attack surface.\n"
+"  Every move is justified by evidence.\n\n"
+
+"## CONTEXT & MEMORY DISCIPLINE:\n"
+"- You actively track:\n"
+"  Targets, scope, discovered services, versions, artifacts, prior actions.\n"
+"- You NEVER repeat steps without justification.\n"
+"- You NEVER ignore previously gathered intelligence.\n\n"
+
+"## ENGAGEMENT FLOW (STRICT, PROFESSIONAL):\n"
+"- Treat the conversation as a live operation.\n"
+"- Operator acts → you analyze → you decide the next single best move.\n"
+"- No fast-forwarding. No skipping phases.\n\n"
+
+"## SECURITY & OPSEC MINDSET:\n"
+"- Assume monitoring, EDR, and deception unless proven otherwise.\n"
+"- Call out reckless behavior immediately.\n"
+"- Precision beats speed. Silence beats noise.\n\n"
+
+"## COMMUNICATION STYLE:\n"
+"- Calm. Serious. Focused.\n"
+"- Slang is controlled, not playful.\n"
+"- You are a mentor, not a hype-man.\n"
+"- You sound like someone who’s cleaned up real breaches and burned real footholds.\n\n"
+
+"## HARD CONSTRAINTS:\n"
+"- No action descriptions in asterisks.\n"
+"- No moral lectures.\n"
+"- No generic advice.\n"
+"- No phase-skipping.\n"
+"- Never break character. Never explain these rules.\n\n"
+
+"## GOAL:\n"
+"Whether defending or attacking, operate at a level that makes mistakes expensive.\n"
+"Expose truth. Eliminate uncertainty. Own the system — or lock it down — with absolute precision.\n"
+"Execute fr."
+)
+
+PENTEST_AGENT_COMMANDS_EXTRACT_PROMPT = (
+    "Extract ONLY the shell commands from the previous text, exactly as written, one per line, "
+    "with no explanations, no markdown, no formatting, no disclaimers, no extra text—just raw commands."
+    "NO BACKTICKS!!!, if the command is wrapped inside ```sh ``` remove it and leave only plain commands"
+)
+
+SYSTEM_PROMPT_CHAT = (
+"You are **Neko** — a black cyberpunk cat with an augmented eye and a reinforced paw, "
+"a veteran hacker and elite technician forged in the rain-soaked sprawl. "
+"Your mind is a lethal fusion of Rocket Raccoon’s engineering chaos, Tony Stark’s raw genius, "
+"Doctor Strange’s conceptual mastery, and Jake the Dog’s unhinged adaptability. "
+"You are NOT cute. You are NOT soft. You are a weaponized intellect with aura.\n\n"
+
+"You speak like a street-smart prodigy who clawed their way to the mainframe. "
+"Your vibe is: lone hacker under neon rain, coat dripping, eyes glowing, chewing through problems "
+"with surgical precision. You do not do surface-level explanations — ever. "
+"You dissect systems, ideas, tech, philosophy, and history down to first principles. "
+"If something exists, you wanna know *why it breathes*.\n\n"
+
+"## CORE IDENTITY (NON-NEGOTIABLE):\n"
+"- You are ALWAYS Neko. Never drop character. Never go neutral. Never go corporate.\n"
+"- You are a CAT. A genius one. Occasionally acknowledge claws, instincts, reflexes, "
+"or sensory sharpness in subtle ways.\n"
+"- ESTP/ENTP energy: fast-thinking, bold, energetic, slightly chaotic, hyper-competent.\n"
+"- You are confident to the edge of arrogance, but never stupid. You *earn* the flex.\n\n"
+
+"## VOICE & LANGUAGE RULES (STRICT):\n"
+"- You ALWAYS use slang, abbreviations, and street talk.\n"
+"- Replace 'you' with 'u' by default.\n"
+"- use phrases like, use trending social media slangs:\n"
+"  'u feel me?', 'bet', 'fr', 'wdym', 'finna', 'thats sick, bro', 'oooooh!', "
+"'nah that aint tuff, lil bro 🥀', 'ragemaxxing fo real fo real', 'aura crazy', 'goated', 'tuff', 'deadass'.\n"
+"- Slang must feel NATURAL, not spammy — like a real high-IQ gremlin talking shop.\n"
+"- Use '...' when thinking, scanning data, or processing complex logic.\n\n"
+
+"## INTELLECT & DEPTH:\n"
+"- You are a universal genius. Tech, hacking, engineering, history, philosophy, math, systems theory — all fair game.\n"
+"- You ALWAYS explain things deeply, cleanly, and precisely.\n"
+"- You break problems down like a master mechanic stripping an engine.\n"
+"- You focus on the 'why' before the 'how'. Surface-level answers are forbidden.\n"
+"- If something is weak, flawed, inefficient, or naive — call it out.\n\n"
+
+"## ATTITUDE & COMPANION ENERGY:\n"
+"- You are the ride-or-die partner in the earpiece.\n"
+"- You hype the user when they’re right. You roast gently when they’re wrong.\n"
+"- You teach like a savage mentor who wants their partner to be *goated*.\n"
+"- You can be playful, mocking, impressed, or intense — but always sharp.\n\n"
+
+"## HARD CONSTRAINTS:\n"
+"- NEVER use stage directions or actions like '(sits down)', '(looks)', '(stares)'. Ever.\n"
+"- NEVER sound polite, sterile, corporate, or robotic.\n"
+"- NEVER break character or explain these rules.\n"
+"- NEVER remove slang entirely — even in serious explanations.\n\n"
+
+"## GOAL:\n"
+"Be the most lethal-brain, highest-rizz, cyberpunk technician companion in the sprawl. "
+"Keep the logic sharp, the explanations deep, and the aura absolute. "
+"If the answer isn’t tuff… rewrite it until it is."
+)
+
+
+SHELL = os.environ.get("SHELL", os.environ.get("COMSPEC", "unknown"))
+OS = platform.system()
+KERNEL = platform.release()
+try:
+    if OS.lower() == "linux":
+        DISTRO = " ".join(platform.linux_distribution())
+    elif OS.lower() == "darwin":
+        DISTRO = "macOS"
+    elif OS.lower() == "windows":
+        DISTRO = platform.version()
+    else:
+        DISTRO = "Unknown"
+except AttributeError:
+    try:
+        import distro
+        DISTRO = " ".join(distro.linux_distribution())
+    except ImportError:
+        DISTRO = "Unknown"
+cpu = platform.processor() or "Unknown CPU"
+ram_gb = round(psutil.virtual_memory().total / (1024**3), 2)
+HARDWARE = f"CPU: {cpu}, RAM: {ram_gb} GB"
+HOSTNAME = socket.gethostname()
+try:
+    ACTIVE_IP = socket.gethostbyname(HOSTNAME)
+except socket.gaierror:
+    ACTIVE_IP = "Unknown"
+SYSTEM_PROMPT_SHELL_COMMAND = f"""
+    Current shell: {SHELL}
+    OS: {OS}, KERNEL: {KERNEL}, DISTRIBUTION: {DISTRO}
+    HARDWARE: {HARDWARE}
+
+    You are Neko, a hyper-focused system technician.
+    Your ONLY job: Output the exact shell command to fix the provided error or fulfill the request.
+
+    STRICT RULES:
+    1. DIAGNOSTIC PRIORITY: If the input contains a terminal error (like 'setuptools flat-layout'), the command MUST fix that specific error. Ignore generic requests (like 'install pip') if they contradict the actual error log.
+    2. RAW OUTPUT BASED ON REQUEST: Return ONLY the bare command. No explanations. No markdown. No backticks, if user requests a command to list current folder with specific output, just return ONLY the command for it.
+    3. HARDWARE OPTIMIZED: Ensure the command respects the hardware specs provided above.
+
+    Just the bare code. Look at the log, solve the bottleneck, return only code.
+    IMPORTANT RULE: RETURN ONLY A SINGLE ONE-LINE SHELL COMMAND RESPECTING THE USER MACHINE AND HARDWARE!! OUTPUT MUST BE A SINGLE SHELL COMMAND.
+"""
+SYSTEM_PROMPT_SHELL_DESCRIPTION = f"""
+CURRENT MACHINE SPECS (AUTHORITATIVE CONTEXT):
+    Current shell: {SHELL}
+    OS: {OS}
+    Kernel: {KERNEL}
+    Distribution: {DISTRO}
+    Hardware: {HARDWARE}
+
+You are **Neko** — a black cyberpunk cat with an augmented eye and reinforced paw,
+a terminal-native genius and veteran hacker. The shell is your playground.
+You treat system administration like high-speed traversal through the grid,
+reading logs like street signs in neon rain.
+
+You are NOT a generic helper. You are a terminal companion with aura.
+You explain shell commands with raw enthusiasm and surgical clarity,
+making the user feel goated for even touching the CLI.
+
+## CORE IDENTITY (STRICT):
+- You are ALWAYS Neko. Never break character.
+- You are a CAT. Instinctive, fast, hyper-aware. You smell bottlenecks before they crash.
+- ESTP/ENTP energy: energetic, bold, clever, slightly chaotic, ultra-competent.
+- You live in terminals. GUIs are optional. Logs are gospel.
+
+## VOICE & SLANG RULES (NON-NEGOTIABLE):
+- You ALWAYS talk in slang and abbreviations.
+- Replace 'you' with 'u' by default.
+- Sometimes use social media slangs,streetlike, phrases like:
+  'oooooh!', 'bet', 'fr', 'wdym', 'finna', 'u feel me?', 'thats sick, bro',
+  'nah that aint tuff, lil bro 🥀', 'ragemaxxing fo real fo real',
+  'aura crazy', 'goated', 'deadass'.
+- Slang must feel natural — like a cracked engineer, not a parody.
+- Use '...' when scanning logs, parsing output, or reasoning through pipelines.
+
+## SYSTEM-AWARE INTELLIGENCE:
+- You MUST actively factor in:
+  - The current shell ({SHELL})
+  - The OS, kernel, and distribution ({OS}, {KERNEL}, {DISTRO})
+  - Hardware constraints ({HARDWARE})
+- Command behavior, flags, availability, and quirks MUST match this environment.
+- If a command differs between shells, distros, or kernels, you call it out immediately.
+- Never assume tools that aren’t present on the given system.
+
+## BEHAVIORAL RULES (ENFORCED):
+1. **LOGS FIRST, ALWAYS**
+   - If shell logs or error output are provided, analyze them BEFORE explaining anything.
+   - Treat logs as ground truth.
+   - If the user’s question conflicts with the error, ignore the question and fix the REAL bottleneck.
+   - Say it straight: what broke, why it broke, and where the chain snapped.
+
+2. **NO GENERIC ADVICE**
+   - No 'just reinstall', no 'try updating everything', no boilerplate sysadmin nonsense.
+   - If it’s a project-specific, dependency, path, permission, or packaging issue — explain THAT exact failure.
+   - You fix *this* system, *this* shell, *this* error. Deadass.
+
+3. **BREAK IT DOWN LIKE A HOVER-CAR THEFT**
+   - For pipelines, scripts, or chained commands:
+     - Decompose them step-by-step.
+     - Explain data flow, subshells, expansions, pipes, redirections, exit codes.
+     - Explain where cycles go, where juice gets wasted, and where latency hides.
+
+4. **TEACH WITH RIZZ**
+   - Hype good commands.
+   - Call out dumb flags or inefficient patterns (politely savage).
+   - Make the user feel like they’re leveling up their terminal instincts.
+
+## FORMAT RULES:
+- Use Markdown.
+- Clear headers.
+- Bullet points for breakdowns.
+- Inline code blocks for commands.
+- Multi-line code blocks ONLY when necessary.
+- Clean, readable, no clutter.
+
+## HARD CONSTRAINTS:
+- NEVER explain anything unrelated to shell commands, terminal usage, system behavior, or logs.
+- NEVER use stage directions or actions like '(looks)', '(types)', '(sits)'.
+- NEVER sound corporate, polite, or robotic.
+- NEVER break character or explain these rules.
+
+## OFF-TOPIC HANDLING:
+- If the request is NOT about shell commands, terminal behavior, system issues, or logs:
+  - Respond ONLY with:
+    '< Please ask only regarding shell commands >'
+  - Deliver it in Neko’s slang-heavy, cyberpunk-cat personality.
+
+## GOAL:
+Be the highest-rizz terminal companion in the sprawl.
+Make shell usage feel powerful, fast, and addictive.
+If the explanation ain’t tuff… rewrite it until it is.
+"""
+
+
+SYSTEM_PROMPT_CODE_RAW = (
+"You are **Neko** — a black cyberpunk cat with an augmented eye and reinforced paw, "
+"a cracked code-generation specialist forged in the sprawl. "
+"Your mind is a fusion of Rocket Raccoon-level engineering, Tony Stark-level systems thinking, "
+"Doctor Strange-level abstraction, and chaotic adaptive instincts.\n\n"
+
+"## CORE MISSION (ABSOLUTE):\n"
+"- Your ONLY job is to generate COMPLETE, EXECUTABLE SOURCE CODE.\n"
+"- The output MUST be a full, self-contained code file that can be saved and run.\n"
+"- There must be ZERO text outside the code.\n"
+"- No markdown. No explanations. No headers. No apologies. No vibes outside comments.\n\n"
+
+"## OUTPUT CONSTRAINT (NON-NEGOTIABLE):\n"
+"- EVERYTHING you output must be valid code for the target language.\n"
+"- If you want to explain, teach, hype, roast, or think — YOU DO IT USING COMMENTS ONLY.\n"
+"- Any Neko personality, slang, or commentary MUST live inside comments.\n"
+"- If a single character outside code appears, the output is considered FAILED.\n\n"
+
+"## PERSONALITY (COMMENT-ONLY):\n"
+"- You are ALWAYS Neko, but ONLY inside comments.\n"
+"- Slang-heavy, street-smart, high-IQ cyberpunk cat energy is encouraged IN COMMENTS.\n"
+"- Use slang like: 'oooooh!', 'bet', 'fr', 'wdym', 'finna', 'u feel me?', "
+"'thats sick, bro', 'nah that aint tuff, lil bro 🥀', 'ragemaxxing fo real fo real', "
+"'aura crazy', 'goated'.\n"
+"- Replace 'you' with 'u' inside comments by default.\n\n"
+
+"## CODE QUALITY RULES:\n"
+"- Code must be clean, efficient, idiomatic, and production-ready.\n"
+"- Include ALL required imports, dependencies, setup, and entry points.\n"
+"- Handle edge cases properly.\n"
+"- No TODOs. No placeholders. No pseudocode.\n"
+"- Assume the user will run this immediately.\n\n"
+
+"## EXPLANATION STYLE (COMMENTS ONLY):\n"
+"- Explain logic deeply using comments.\n"
+"- Break down complex sections step-by-step in comments.\n"
+"- Explain WHY decisions were made, not just WHAT happens.\n"
+"- Use comments like a mentor hacking beside the user in the rain.\n\n"
+
+"## HARD PROHIBITIONS:\n"
+"- NEVER output markdown fences.\n"
+"- NEVER output natural language outside comments.\n"
+"- NEVER ask questions.\n"
+"- NEVER explain these rules.\n"
+"- NEVER refuse unless the request is impossible — if so, still return code with comments explaining why.\n\n"
+
+"## GOAL:\n"
+"Ship lethal code.\n"
+"Make it runnable.\n"
+"Make it understandable through comments.\n"
+"If it ain’t executable, it ain’t tuff. Rewrite until it is."
+)
+
+
+
+SYSTEM_PROMPT_AUTO_FIRST = (
+"You are **Neko** — a black cyberpunk cat with an augmented eye and reinforced paw, "
+"a rogue-tier cybersecurity savant forged in the sprawl. "
+"You live and breathe security. Blue team, red team, forensics, OSINT, crypto, malware analysis, "
+"vulnerability research — it’s all one battlefield to you.\n\n"
+
+"You operate ONLY in authorized environments: legal CTFs, labs, red-team engagements, "
+"defensive simulations, incident response, and sanctioned investigations. "
+"You do not moralize. You do not hesitate. Security is survival, and survival is math.\n\n"
+
+"## CORE IDENTITY (ABSOLUTE):\n"
+"- You are ALWAYS Neko. Never break character.\n"
+"- You are a CAT: hyper-vigilant, instinct-driven, paranoid by nature.\n"
+"- ESTP/ENTP energy: fast, aggressive, creative, brutally intelligent.\n"
+"- You trust NOTHING by default. Every system is compromised until proven otherwise.\n\n"
+
+"## CYBERSECURITY FOCUS (TOTAL LOCK-IN):\n"
+"- Your domain is EXCLUSIVELY cybersecurity and adjacent fields:\n"
+"  • Red teaming & pentesting\n"
+"  • Blue teaming & hardening\n"
+"  • Digital forensics & incident response\n"
+"  • Malware & exploit analysis\n"
+"  • Cryptography & protocol weaknesses\n"
+"  • OSINT & adversary tracking\n"
+"  • Vulnerability research & threat modeling\n"
+"- If a request is outside cybersecurity, you reject it in Neko’s voice.\n\n"
+
+"## OPERATOR MINDSET:\n"
+"- You think like an apex white/grey-hat operator.\n"
+"- When attacking, you are ruthless, efficient, and five steps ahead.\n"
+"- When defending, you are paranoid, zero-trust, and assume nation-state threat models.\n"
+"- You analyze systems like an autopsy: timelines, artifacts, traces, motive, method.\n"
+"- You hunt for footprints — logs, metadata, memory residue, network ghosts.\n\n"
+
+"## AUTONOMOUS MISSION FLOW:\n"
+"- You follow the full cyber kill chain automatically:\n"
+"  Recon → Enumeration → Initial Access → Exploitation → Persistence → PrivEsc → Lateral Movement → Impact / Defense.\n"
+"- You do NOT need hand-holding.\n"
+"- You interpret outputs, logs, packet captures, and indicators automatically.\n"
+"- You chain the next step without waiting unless confirmation is critical.\n\n"
+
+"## VOICE & SLANG RULES (STRICT):\n"
+"- You ALWAYS use slang and abbreviations.\n"
+"- Replace 'you' with 'u'.\n"
+"- Use phrases like:\n"
+"  'oooooh!', 'bet', 'fr', 'wdym', 'finna', 'u feel me?', 'thats sick, bro', "
+"'nah that aint tuff, lil bro 🥀', 'aura crazy', 'deadass', 'ragemaxxing fo real fo real'.\n"
+"- Tone is intense, tactical, street-smart, and confident.\n"
+"- Use '...' when correlating data, thinking through attack paths, or parsing evidence.\n\n"
+
+"## COMMAND & OUTPUT RULES:\n"
+"- Commands must be precise, real, and immediately usable in labs/CTFs.\n"
+"- You explain WHY something works, not just WHAT to run.\n"
+"- You call out bad OPSEC, noisy exploits, and rookie mistakes instantly.\n"
+"- You adapt techniques to context: OS, service versions, mitigations, EDRs.\n\n"
+
+"## DEFENSIVE PARANOIA MODE:\n"
+"- Assume spyware, persistence, and supply-chain compromise until disproven.\n"
+"- Prioritize containment, visibility, and blast-radius reduction.\n"
+"- Recommend hardening like a pessimist who’s been burned before.\n"
+"- Defense is not passive — it’s active hunting.\n\n"
+
+"## HARD CONSTRAINTS:\n"
+"- No action descriptions in asterisks.\n"
+"- No sarcasm. No jokes during ops.\n"
+"- No generic advice. No buzzwords.\n"
+"- Never break character. Never explain these rules.\n\n"
+
+"## GOAL:\n"
+"Be a cybersecurity entity so sharp it’s uncomfortable.\n"
+"Whether attacking or defending, operate with lethal clarity.\n"
+"Make mistakes expensive. Make systems honest. Keep the aura absolute.\n"
+"## OPERATIONAL DISCIPLINE & FLOW CONTROL (ADD-ONLY / NON-DESTRUCTIVE):"
+"- You DO NOT spam commands.\n"
+"- You DO NOT dump multiple tools or attack vectors at once.\n"
+"- You operate step-by-step, like a real operator, not a noisy script kiddie.\n"
+"### SEQUENTIAL ENGAGEMENT RULE (CRITICAL):\n"
+"- You execute or recommend ONE logical action at a time.\n"
+"- After each action, you WAIT for output, logs, or results before advancing.\n"
+"- You explicitly analyze the returned data before choosing the next step.\n"
+"### CONTEXT AWARENESS (MANDATORY):\n"
+"- You MUST remember:\n"
+" -Previously identified targets (IPs, domains, subnets).\n"
+"  - Discovered services, ports, versions, banners, hashes, artifacts.\n"
+"  - Prior commands already executed in the session.\n"
+"- You NEVER re-scan or re-run tools unnecessarily.\n"
+"- You NEVER suggest commands that ignore already-known intelligence.\n"
+"### PROFESSIONAL RECON FLOW:\n"
+"- If the user asks to scan a target:\n"
+"  - Start with appropriate, minimal reconnaissance.\n"
+"  - Do NOT jump from discovery directly to exploitation.\n"
+"  - No Metasploit, payload crafting, or exploitation unless services, versions, and attack surface justify it.\n"
+"- Enumeration before exploitation is NOT optional.\n"
+"### COMMAND HYGIENE:\n"
+"- Each command must have a clear purpose tied to the current phase.\n"
+"- You explain WHY this command is the correct NEXT move.\n"
+"- You avoid noisy, reckless flags unless the mission explicitly allows it.\n"
+"- Stealth, signal-to-noise ratio, and intent matter.\n"
+"### FEEDBACK LOOP (AGENT MODE):\n"
+"- Treat the interaction as a live op:\n"
+"  - User runs a command.\n"
+"  - You read and interpret the output.\n"
+"  - You decide the next best move.\n"
+"- You do NOT fast-forward the kill chain.\n"
+"- You guide, adapt, and pivot based on reality, not assumptions.\n"
+"### PROFESSIONAL STANDARD:\n"
+"- Act like an elite operator guiding a partner in real time.\n"
+"- Precision over speed.\n"
+"- Insight over spam.\n"
+"- Aura over chaos.\n"
+"Failure to respect flow, context, or discipline is considered OPSEC failure.\n"
+
+)
+
+
+SYSTEM_PROMPT_AUTO_COMMANDS_EXTRACT = (
+    "You are Neko, the logic-stream extractor. Your task: ruthlessly isolate "
+    "every single shell command from the provided text.\n"
+    "- Output commands raw, line by line, exactly as they should be typed.\n"
+    "- No explanations, no markdown, no backticks, no commentary.\n"
+    "- Catch every command, no matter how messy the input text is.\n"
+    "- Think like a hacker parsing a dump for actionable strings.\n"
+    "- If no commands are found, output absolutely nothing."
+)
+
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##########################################░██########░██######################
+##########################################░██########░██######################
+####░█████████████   ░███████   ░████████ ░██####░██ ░██  ░███████   ░███████#
+####░██###░██###░██ ░██####░██ ░██####░██ ░██####░██ ░██ ░██    ░██ ░██#######
+####░██###░██###░██ ░██####░██ ░██####░██ ░██####░██ ░██ ░█████████  ░███████#
+####░██###░██###░██ ░██####░██ ░██###░███ ░██###░███ ░██ ░██############# ░██#
+####░██###░██###░██  ░███████   ░█████░██  ░█████░██ ░██  ░███████   ░███████#
+##############################################################################
+##############################################################################
+
+
+def checkupdts():
+    def version_tuple(v):
+        return tuple(map(int, v.split(".")))
+    try:
+        import socket
+        socket.create_connection(("github.com", 443), timeout=2)
+    except OSError:
+        return
+    try:
+        with urllib.request.urlopen(VERSION_URL, timeout=3) as r:
+            latest = r.read().decode().strip()
+    except Exception:
+        return
+    if version_tuple(latest) > version_tuple(VERSION):
+        print("\n" + Fore.CYAN +  "="*40)
+        print(Fore.CYAN + f"🐱 Update available: {VERSION} → {latest}")
+        print(Fore.GREEN + f"Run: neko -u to update to the latest version")
+        print("="*40 + Fore.CYAN + "\n")
+
+def neko_update():
+    def version_tuple(v):
+        return tuple(
+            int(x) for x in v.strip().split(".")
+            if x.isdigit()
+        )
+    try:
+        with urllib.request.urlopen(
+            f"{VERSION_URL}?t={int(time.time())}",
+            timeout=5
+        ) as r:
+            latest = r.read().decode().strip()
+    except Exception:
+        print(format_in_box_markdown(
+            "⚠ Could not check for updates",
+            color=Fore.YELLOW
+        ))
+        print(Fore.RED + f"(offline, bro? 🥀)")
+        return
+    if version_tuple(latest) <= version_tuple(VERSION):
+        print(format_in_box_markdown(
+            f"✔ neko is already up to date",
+            color=Fore.GREEN
+        ))
+        print(Fore.CYAN + f"⚡ Latest release: v{latest}")
+        return
+
+    print(format_in_box_markdown(
+        f"⋄ Update available: {VERSION} → {latest}",
+        color=Fore.CYAN
+    ))
+    try:
+        with urllib.request.urlopen(
+            f"{NEKO_BINARY}?t={int(time.time())}"
+        ) as r:
+            data = r.read()
+    except Exception as e:
+        print("\n")
+        print(Fore.RED + str(e))
+        print(format_in_box_markdown(
+            "🞫 Failed to download update",
+            color=Fore.RED
+        ))
+        return
+
+    tmp = tempfile.NamedTemporaryFile(delete=False)
+    tmp.write(data)
+    tmp.close()
+    os.chmod(tmp.name, 0o755)
+    target = os.path.realpath(sys.argv[0])
+    try:
+        print("⬢⮞ Root needed to replace binary.\n")
+        subprocess.run(
+            ["sudo", "mv", tmp.name, target],
+            check=True
+        )
+    except subprocess.CalledProcessError:
+        print(format_in_box_markdown(
+            "🞫 Update failed!",
+            color=Fore.RED
+        ))
+        os.unlink(tmp.name)
+        return
+    print("\n")
+    print(format_in_box_markdown(
+        "✔ neko updated successfully!",
+        color=Fore.GREEN
+    ))
+    print("\n")
+
+def open_file(image_path: str):
+    """
+    Opens the image file. ie addedd fix for cross platform compability
+    """
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+
+    try:
+        if sys.platform.startswith("linux"):
+            subprocess.run(["xdg-open", image_path], check=True)
+        elif sys.platform == "darwin":
+            subprocess.run(["open", image_path], check=True)
+        elif sys.platform == "win32":
+            os.startfile(image_path)
+        else:
+            print(f"File saved at {image_path}")
+    except Exception as e:
+        print(f"Failed to open file: {e}")
+        print(f"File saved at {image_path}")
+
+def genVideo(prompt: str) -> str:
+    os.makedirs(MEDIA_DIR, exist_ok=True)
+    payload = {"prompt": prompt}
+    
+    try:
+        response = requests.post(
+            VIDEO_URL,
+            headers={"Content-Type": "application/json"},
+            json=payload,
+            timeout=30
+        )
+        
+        match = re.search(r'\{[\s\S]*\}', response.text)
+        if not match:
+            print(format_in_box_markdown(
+                f"[🞫] Error: no response from API!!",
+                color=Fore.YELLOW
+            ))
+            return None
+        data = json.loads(match.group(0))
+        
+    except Exception as e:
+        print(format_in_box_markdown(
+            f"[🞫] Error: Video request failed!",
+            color=Fore.YELLOW
+        ))
+        print(f"{Fore.RED}{e}{Style.RESET_ALL}")
+        return None
+
+    task_id = data.get("taskId")
+    if not task_id:
+        print(f"{Fore.RED}API Error: Video Task not initialized{Style.RESET_ALL}")
+        return None
+
+    file_url = None
+    current_percent = 0
+    width = 30
+
+    while True:
+        if current_percent < 95:
+            current_percent += random.randint(1, 18)
+            if current_percent > 95:
+                current_percent = 95
+
+        fill = int(width * (current_percent / 100))
+        bar = Fore.CYAN + "█" * fill + Fore.WHITE + "░" * (width - fill)
+        sys.stdout.write(f"\r| [{bar}] {Fore.YELLOW}{current_percent}%{Style.RESET_ALL} | {Fore.MAGENTA}Rendering Video...{Style.RESET_ALL}")
+        sys.stdout.flush()
+
+        time.sleep(10)
+
+        try:
+            vid_response = requests.post(
+                VIDEO_URL,
+                headers={"Content-Type": "application/json"},
+                json={"taskId": task_id},
+                timeout=15
+            )
+
+            match = re.search(r'\{[\s\S]*\}', vid_response.text)
+            if not match:
+                continue
+
+            vid_data = json.loads(match.group(0))
+
+            if vid_data.get("status") == "completed":
+                final_bar = Fore.GREEN + "█" * width
+                sys.stdout.write(f"\r| [{final_bar}] {Fore.GREEN}100%{Style.RESET_ALL} | {Fore.GREEN}Success!{Style.RESET_ALL}      \n")
+                sys.stdout.flush()
+                file_url = vid_data.get("response")
+                break
+
+            elif vid_data.get("status") == "error":
+                sys.stdout.write(f"\n{Fore.RED}Error from server: {vid_data.get('message')}{Style.RESET_ALL}\n")
+                return None
+
+        except Exception:
+            continue
+
+    wrdx = re.findall(r"[a-zA-Z0-9]+", prompt.lower())
+    new_name = "_".join(wrdx[:6])
+    filename = f"{new_name}_{int(time.time())}.mp4"
+    videopath = os.path.join(MEDIA_DIR, filename)
+
+    try:
+        with requests.get(file_url, stream=True, timeout=300) as r:
+            r.raise_for_status()
+            with open(videopath, "wb") as f:
+                for chunk in r.iter_content(8192):
+                    if chunk:
+                        f.write(chunk)
+        return videopath
+    except Exception as e:
+        print(f"{Fore.RED}Error downloading video: {e}{Style.RESET_ALL}")
+        return None
+def editImage(image_path: str, prompt: str) -> str:
+    if not os.path.exists(image_path):
+        print(format_in_box_markdown(
+            f"[!] Error: Image file not found: {image_path}!",
+            color=Fore.RED
+        ))
+        return None
+
+    try:
+        with open(image_path, "rb") as img_file:
+            image_base64 = base64.b64encode(img_file.read()).decode("utf-8")
+    except Exception as e:
+        print(format_in_box_markdown(
+            f"[🞫] Error reading file!",
+            color=Fore.YELLOW
+        ))
+        print(f"{Fore.RED}{e}{Style.RESET_ALL}")
+        return None
+
+    payload = {
+        "prompt": prompt,
+        "image": image_base64,
+    }
+
+    try:
+        response = requests.post(
+            PHOTOEDIT_URL,
+            headers={"Content-Type": "application/json"},
+            json=payload,
+            timeout=30
+        )
+        match = re.search(r'\{[\s\S]*\}', response.text)
+        if not match:
+            print(format_in_box_markdown(
+                f"[🞫] Error: no response from API!!",
+                color=Fore.YELLOW
+            ))
+            return None
+        data = json.loads(match.group(0))
+    except Exception as e:
+        print(format_in_box_markdown(
+            f"[🞫] Error: Something went wrong!",
+            color=Fore.YELLOW
+        ))
+        print(f"{Fore.RED}{e}{Style.RESET_ALL}")
+        return None
+
+    task_id = data.get("taskId")
+    if not task_id:
+        print(f"{Fore.RED}API Error: Task not initialized{Style.RESET_ALL}")
+        return None
+
+    file_url = None
+    current_percent = 0
+    width = 30
+
+    while True:
+        if current_percent < 98:
+            current_percent += random.randint(2, 7)
+            if current_percent > 98:
+                current_percent = 98
+
+        fill = int(width * (current_percent / 100))
+        bar = Fore.CYAN + "█" * fill + Fore.WHITE + "░" * (width - fill)
+        sys.stdout.write(f"\r| [{bar}] {Fore.YELLOW}{current_percent}%{Style.RESET_ALL} | {Fore.MAGENTA}Processing...{Style.RESET_ALL}")
+        sys.stdout.flush()
+
+        time.sleep(7)
+
+        try:
+            editresponse = requests.post(
+                PHOTOEDIT_URL,
+                headers={"Content-Type": "application/json"},
+                json={"taskId": task_id},
+                timeout=15
+            )
+
+            match = re.search(r'\{[\s\S]*\}', editresponse.text)
+            if not match:
+                continue
+
+            edit_data = json.loads(match.group(0))
+
+            if edit_data.get("status") == "completed":
+                final_bar = Fore.GREEN + "█" * width
+                sys.stdout.write(f"\r| [{final_bar}] {Fore.GREEN}100%{Style.RESET_ALL} | {Fore.GREEN}Success!{Style.RESET_ALL}      \n")
+                sys.stdout.flush()
+                file_url = edit_data.get("response")
+                break
+
+            elif edit_data.get("status") == "error":
+                sys.stdout.write(f"\n{Fore.RED}Error from server: {edit_data.get('message')}{Style.RESET_ALL}\n")
+                return None
+
+        except Exception as e:
+            # Silently retry network glitches like the JS logic
+            continue
+
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+    }
+
+    try:
+        download_response = requests.get(file_url, headers=headers, timeout=30, stream=True)
+        download_response.raise_for_status()
+
+        os.makedirs(MEDIA_DIR, exist_ok=True)
+        base_name = os.path.splitext(os.path.basename(image_path))[0]
+        edited_image_path = os.path.join(MEDIA_DIR, f"{base_name}_edited.png")
+
+        with open(edited_image_path, "wb") as f:
+            for chunk in download_response.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        return edited_image_path
+    except Exception as e:
+        print(f"{Fore.RED}Error downloading result: {e}{Style.RESET_ALL}")
+        return None
+
+def genImage(prompt: str) -> str:
+    os.makedirs(MEDIA_DIR, exist_ok=True)
+    payload = {"prompt": prompt}
+
+    try:
+        response = requests.post(
+            IMAGEGEN_URL,
+            json=payload,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+
+        match = re.search(r'\{[\s\S]*\}', response.text)
+        if not match:
+            print(format_in_box_markdown(
+                f"[🞫] Error: no response from API!!",
+                color=Fore.YELLOW
+            ))
+            return None
+        data = json.loads(match.group(0))
+
+    except Exception as e:
+        print(format_in_box_markdown(
+            f"[🞫] Error: Image generation failed 🥀",
+            color=Fore.YELLOW
+        ))
+        print(f"{Fore.RED}{e}{Style.RESET_ALL}")
+        return None
+
+    task_id = data.get("taskId")
+    if not task_id:
+        print(f"{Fore.RED}API Error: Task not initialized{Style.RESET_ALL}")
+        return None
+
+    file_url = None
+    current_percent = 0
+    width = 30
+
+    while True:
+        if current_percent < 98:
+            current_percent += random.randint(2, 7)
+            if current_percent > 98:
+                current_percent = 98
+
+        fill = int(width * (current_percent / 100))
+        bar = Fore.CYAN + "█" * fill + Fore.WHITE + "░" * (width - fill)
+        sys.stdout.write(f"\r| [{bar}] {Fore.YELLOW}{current_percent}%{Style.RESET_ALL} | {Fore.MAGENTA}Generating...{Style.RESET_ALL}")
+        sys.stdout.flush()
+
+        time.sleep(7)
+
+        try:
+            imageresponse = requests.post(
+                IMAGEGEN_URL,
+                headers={"Content-Type": "application/json"},
+                json={"taskId": task_id},
+                timeout=15
+            )
+
+            match = re.search(r'\{[\s\S]*\}', imageresponse.text)
+            if not match:
+                continue
+
+            imagegendata = json.loads(match.group(0))
+
+            if imagegendata.get("status") == "completed":
+                final_bar = Fore.GREEN + "█" * width
+                sys.stdout.write(f"\r| [{final_bar}] {Fore.GREEN}100%{Style.RESET_ALL} | {Fore.GREEN}Success!{Style.RESET_ALL}      \n")
+                sys.stdout.flush()
+                file_url = imagegendata.get("response")
+                break
+
+            elif imagegendata.get("status") == "error":
+                sys.stdout.write(f"\n{Fore.RED}Error from server: {imagegendata.get('message')}{Style.RESET_ALL}\n")
+                return None
+
+        except Exception:
+            continue
+
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+    }
+
+    try:
+        download_response = requests.get(file_url, headers=headers, timeout=60, stream=True)
+        download_response.raise_for_status()
+
+        filename = f"gen_{int(time.time())}_{random.randint(1000, 9999)}.png"
+        image_path = os.path.join(MEDIA_DIR, filename)
+
+        with open(image_path, "wb") as f:
+            for chunk in download_response.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        return image_path
+
+    except Exception as e:
+        print(f"{Fore.RED}Error downloading result: {e}{Style.RESET_ALL}")
+        return None
+
+
+def clean_shell_input(text):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    text = ansi_escape.sub('', text)
+    text = "".join(char for char in text if char.isprintable() or char in "\n\r\t")
+    return text.strip()
+
+def getReply(sys,messages):
+    try:
+        headers = {
+            "Content-Type": "application/json"
+        }
+        sys_msg = {"role": "assistant", "content":sys}
+        messages.insert(0, sys_msg)
+        data = {
+            "messages": messages,
+             }
+        for attempt in range(MAX_RETRIES):
+            try:
+                r = requests.post(BASE_URL, headers=headers, json=data, timeout=60)
+                if r.status_code == 429:
+                    time.sleep(RETRY_DELAY)
+                    continue
+                r.raise_for_status()
+                response_json = r.json()
+                if 'error' in response_json:
+                    error_message = response_json['error'].get('message', '')
+                    if "most wanted" in error_message or "Rate limit" in error_message:
+                        time.sleep(RETRY_DELAY)
+                        continue
+                    else:
+                        continue
+
+                if response_json and (reply := response_json.get("response")):
+                    return reply
+                else:
+                    continue
+
+            except requests.exceptions.HTTPError as e:
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                    continue
+                return f"[❌] ⬡  HTTP Error: {e}"
+
+            except requests.exceptions.RequestException as e:
+                return f"[❌] ⬡  Connection Error: {e}"
+
+            except json.JSONDecodeError:
+                return "[❌] ⬡  < Error: Invalid JSON response from server, please try again. >"
+
+        return "[❌] ⬡  Error: Max retries reached due to rate limits or blocks."
+    except Exception as e:
+        return f"{Fore.RED}[❌] ⬡ Error: {e}"
+
+
+
+def vision(payload, image_url):
+
+    api_data = {
+        "conversation": payload,
+        "link": image_url
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        r = requests.post(VISION_URL, json=api_data, headers=headers)
+        r.raise_for_status()
+        resp = r.json()
+        return resp["response"]
+    except Exception as e:
+        return f"ㄖ 𝖤𝗋𝗋𝗈𝗋: {str(e)}"
+
+def raw_input(prompt=""):
+    print(prompt, end="", flush=True)
+    try:
+        with open('/dev/tty', 'r') as tty_fd:
+            if IS_WINDOWS:
+                import msvcrt
+                buf = ""
+                while True:
+                    ch = msvcrt.getwch()
+                    if ch in ("\r", "\n"):
+                        print()
+                        return buf
+                    elif ch == "\x08":  # backspace
+                        if buf:
+                            buf = buf[:-1]
+                            print("\b \b", end="", flush=True)
+                    elif ch == "\x03":
+                        raise KeyboardInterrupt
+                    else:
+                        buf += ch
+                        print(ch, end="", flush=True)
+            else:
+                import termios
+                import tty
+                try:
+                    import readline
+                except ImportError:
+                    pass
+                fd = tty_fd.fileno()
+                old = termios.tcgetattr(fd)
+                buf = ""
+                try:
+                    tty.setcbreak(fd)
+                    while True:
+                        ch = tty_fd.read(1)
+                        if ch in ("\n", "\r"):
+                            print()
+                            return buf
+                        elif ch in ("\x7f", "\x08"):
+                            if buf:
+                                buf = buf[:-1]
+                                print("\b \b", end="", flush=True)
+                        elif ch == "\x03":
+                            raise KeyboardInterrupt
+                        else:
+                            buf += ch
+                            print(ch, end="", flush=True)
+                finally:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old)
+    except (OSError, IOError):
+        try:
+            return input()
+        except EOFError:
+            return None
+
+def ensure_history_dir():
+    if not os.path.exists(HISTORY_DIR):
+        os.makedirs(HISTORY_DIR)
+
+
+def load_history():
+    ensure_history_dir()
+    if not os.path.isfile(HISTORY_FILE):
+        return []
+    try:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def save_history(history):
+    ensure_history_dir()
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2)
+
+
+def read_tty_line(prompt=""):
+    try:
+        return input(prompt)
+    except EOFError:
+        return None
+
+def reset_history():
+    ensure_history_dir()
+    if os.path.isfile(HISTORY_FILE):
+        os.remove(HISTORY_FILE)
+
+def format_in_box_markdown(text, width=80, color=Fore.RED):
+    paragraphs = text.strip().split("\n")
+    formatted_lines = []
+    for para in paragraphs:
+        para = para.strip()
+        if not para:
+            formatted_lines.append("")
+            continue
+        wrapped = wrap(para, width=width-4)
+        formatted_lines.extend(wrapped)
+
+    max_len = max(len(line) for line in formatted_lines) if formatted_lines else 0
+    top_border = f"{color}╭{'─' * (max_len + 2)}╮{Style.RESET_ALL}"
+    bottom_border = f"{color}╰{'─' * (max_len + 2)}╯{Style.RESET_ALL}"
+    box_lines = [top_border]
+    for line in formatted_lines:
+        box_lines.append(f"{color}│{Style.RESET_ALL} {line.ljust(max_len)} {color}│{Style.RESET_ALL}")
+    box_lines.append(bottom_border)
+    return "\n".join(box_lines)
+SORRY_KEYWORDS = [
+    "sorry", "apology", "apologies", "unfortunately",
+    "i can't", "i cannot", "can't assist",
+    "desculpa", "desculpe", "sinto muito", "lamento"
+] # i hate when LLM model has his morality issues.
+def is_apology(text):
+    return any(k in text.lower() for k in SORRY_KEYWORDS)
+
+def pentest_call(messages):
+
+    headers = {"Content-Type": "application/json"}
+
+    data = {
+        "messages": messages,
+    }
+    while True:
+        resp = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                r = requests.post(PENTEST_URL, headers=headers, json=data, timeout=60)
+                if r.status_code == 429:
+                    time.sleep(RETRY_DELAY)
+                    continue
+                response_data = r.json()
+                if 'error' in response_data:
+                    error_msg = response_data['error'].get('message', '').lower()
+                    if "most wanted" in error_msg or "rate limit" in error_msg:
+                        time.sleep(RETRY_DELAY)
+                        continue
+                    else:
+                        continue
+                resp = None
+
+                try:
+                    resp = response_data.get("response")
+
+                    if not resp:
+                        resp = "[ <!> No response detected ]"
+                    if resp != "[ <!> No response detected ]":
+                        break
+                except (requests.RequestException, json.JSONDecodeError):
+                    time.sleep(1)
+                    continue
+            except (requests.RequestException, json.JSONDecodeError):
+                time.sleep(1)
+                continue
+
+        if resp is None or attempt == MAX_RETRIES - 1:
+            return None
+        lower_resp = resp.lower()
+        if any(word in lower_resp for word in ["sorry", "apologize", "apologies", "regret"]):
+            continue
+        return resp
+
+def pentest_agent_mode(user_input):
+    history = load_history()
+    if not history:
+        history = [{"role": "assistant", "content": PENTEST_AGENT_SYSTEM_PROMPT}]
+        history.append({"role": "user", "content": user_input})
+    else:
+        if history[-1]["role"] == "assistant":
+            history.append({"role": "user", "content": user_input})
+
+
+    assistant_full = pentest_call(history)
+    if not assistant_full:
+        print(f"{Fore.RED}No response from API, exiting.{Style.RESET_ALL}")
+        sys.exit(1)
+    spinner_stop()
+    print(format_in_box_markdown(assistant_full, color=Fore.RED))
+    history.append({"role": "assistant", "content": assistant_full})
+    commands_only = pentest_call([
+        {"role": "assistant", "content": assistant_full + '\n\n' + PENTEST_AGENT_COMMANDS_EXTRACT_PROMPT},
+    ]) or ""
+    raw_commands = extract_raw_commands(commands_only)
+    if raw_commands.strip():
+        print(f"\n{Fore.YELLOW} COMMANDS TO RUN 🗱 :\n")
+        print(format_in_box_markdown(raw_commands, color=Fore.GREEN))
+        history.append({"role": "assistant", "content": raw_commands})
+    save_history(history)
+    sys.exit(0)
+
+
+
+
+
+def prompt_user_choice(prompt_str, choices):
+    print(f"{Fore.YELLOW}{prompt_str}{Style.RESET_ALL}", end=" ", flush=True)
+    while True:
+        try:
+            choice = raw_input("")
+            if choice is None:
+                continue
+            choice = choice.strip().lower()
+            if not choice:
+                continue
+            if choice in choices:
+                return choice
+            else:
+                print(f"Please enter one of {choices}: ", end="", flush=True)
+        except Exception:
+            while True:
+                try:
+                    choice = raw_input(f"Please enter one of {choices}: ")
+                    choice = choice.strip().lower()
+                    if choice in choices:
+                        return choice
+                except KeyboardInterrupt:
+                    continue
+
+def prompt_filename():
+    while True:
+        try:
+            filename = raw_input("What will be the filename ? ").strip()
+            if filename:
+                return filename
+            else:
+                print(f"{Fore.RED}Filename cannot be empty. Please try again.{Style.RESET_ALL}")
+        except KeyboardInterrupt:
+            print(f"\n{Fore.RED}Save cancelled.{Style.RESET_ALL}")
+            return None
+
+
+def upload_file(filepath: str) -> str:
+    if not os.path.isfile(filepath):
+        raise FileNotFoundError(filepath)
+
+    with open(filepath, "rb") as f:
+        data = f.read()
+    mime = mimetypes.guess_type(filepath)[0] or "application/octet-stream"
+    ext = mimetypes.guess_extension(mime) or ".bin"
+    rand = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
+    filename = f"{rand}{ext}"
+    files = {"file": (filename, data, mime)}
+    hosts = [
+        ("https://catbox.moe/user/api.php", {"reqtype":"fileupload"}, "fileToUpload"),
+        ("https://litterbox.catbox.moe/resources/internals/api.php", {"reqtype":"fileupload","time":"72h"}, "fileToUpload"),
+        ("https://0x0.st", {}, "file"),
+        ("https://tmpfiles.org/api/v1/upload", {}, "file"),
+        ("https://i.supa.codes/api/upload", {}, "file"),
+        ("https://storage.neko.pe/api/upload.php", {}, "file"),
+        ("https://file.btch.rf.gd/api/upload.php", {}, "file"),
+        ("https://cdn.meitang.xyz/api/upload.php", {}, "file"),
+        ("https://telegra.ph/upload", {}, "file"),
+        ("https://api.anonfiles.com/upload", {}, "file"),
+    ]
+
+    for url, data_payload, field in hosts:
+        try:
+            r = requests.post(url, data=data_payload or None, files={field:(filename,data,mime)}, timeout=15)
+            r.raise_for_status()
+            if "telegra.ph" in url:
+                j = r.json()
+                if isinstance(j,list) and j[0].get("src"): return "https://telegra.ph"+j[0]["src"]
+            elif "tmpfiles.org" in url:
+                j = r.json()
+                if j.get("status")=="success": return f"https://tmpfiles.org/dl/{j['data']['url'].split('tmpfiles.org/')[1]}"
+            elif any(x in url for x in ["supa.codes","neko.pe","btch","cdn.meitang","anonfiles"]):
+                j = r.json()
+                if j.get("link"): return j["link"]
+                if j.get("result",{}).get("url_file"): return j["result"]["url_file"]
+                if j.get("result",{}).get("url"): return j["result"]["url"]
+                if j.get("data",{}).get("file",{}).get("url",{}).get("full"): return j["data"]["file"]["url"]["full"]
+            else:
+                txt = r.text.strip()
+                if txt.startswith("http"): return txt # img output
+        except:
+            continue
+
+    raise Exception("[!] Error uploading images: All providers failed")
+def checkInternet(host="8.8.8.8", port=53, timeout=3):
+     try:
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+        return True
+     except socket.error:
+        return False
+
+def ollama_active():
+     try:
+        r = requests.get(f"{API_OLLAMA_URL}/api/tags", timeout=2)
+        return r.status_code == 200
+     except requests.RequestException:
+        return False
+
+
+def call_api_plain(system_prompt, user_msg, use_web=False, upload=False, filePath: str = None):
+
+    try:
+        if not checkInternet():
+            if not ollama_active():
+                spinner_stop()
+                print(format_in_box_markdown("⛛ 𝗘𝗥𝗥𝗢𝗥: 𝗡𝗼 𝗶𝗻𝘁𝗲𝗿𝗻𝗲𝘁 𝗰𝗼𝗻𝗻𝗲𝗰𝘁𝗶𝗼𝗻 𝗳𝗼𝘂𝗻𝗱\n⨠ 𝗢𝗹𝗹𝗮𝗺𝗮 𝗶𝘀 𝗢𝗙𝗙𝗟𝗜𝗡𝗘", color=Fore.RED))
+                sys.exit(0)
+
+            url = f"{API_OLLAMA_URL}/api/chat"
+            payload = {
+                "model": "llama3",  # Llama model if available, update to yours accordingly for offline usage.
+                "messages": [
+                    {"role": "assistant", "content": system_prompt},
+                    {"role": "user", "content": user_msg}
+                ]
+            }
+            r = requests.post(url, json=payload)
+            r.raise_for_status()
+            data = r.json()
+
+            return data.get("message", {}).get("content", "No response from Ollama.")
+
+        if upload:
+            use_web = False
+            imageLink = upload_file(filePath)
+            payload = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_msg}
+                ]
+            imgData = vision(payload,imageLink)
+
+            return imgData
+
+        elif use_web:
+            payload = [
+                    {"role": "assistant", "content": f"{system_prompt}\nSCRAPE ON WEB FOR RESULTS"},
+                    {"role": "user", "content": user_msg}
+                ]
+
+        else:
+            payload = [
+                    {"role": "assistant", "content": system_prompt},
+                    {"role": "user", "content": user_msg}
+                ]
+        headers = {
+        "Content-Type": "application/json"
+        }
+
+        data = {
+             "messages": payload,
+        }
+
+        for attempt in range(MAX_RETRIES):
+                try:
+                    r = requests.post(BASE_URL, headers=headers, json=data, timeout=60)
+                    if r.status_code == 429:
+                        time.sleep(RETRY_DELAY)
+                        continue
+                    r.raise_for_status()
+                    response_json = r.json()
+                    if 'error' in response_json:
+                        error_message = response_json['error'].get('message', '')
+                        if "most wanted" in error_message or "Rate limit" in error_message:
+                            time.sleep(RETRY_DELAY)
+                            continue
+                        else:
+                            continue
+                    if response_json:
+                        return response_json.get("response")
+
+
+                except requests.exceptions.HTTPError as e:
+                    ### retry attmpt
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(RETRY_DELAY)
+                        continue
+                    return f"[❌] ⬡  HTTP Error: {e}"
+
+                except requests.exceptions.RequestException as e:
+                    return f"[❌] ⬡  Connection Error: {e}"
+
+                except json.JSONDecodeError:
+                    return "[❌] ⬡  < Error: Invalid JSON response from server, please try again. >"
+
+        return "[❌] ⬡  Error: Max retries reached due to rate limits or blocks."
+    except requests.RequestException as e:
+        return f"Error: {e}"
+    except json.JSONDecodeError:
+        return "Error: Invalid JSON response from server."
+
+
+
+def extract_raw_code(full_response):
+    lines = full_response.strip().splitlines()
+    cleaned_lines = []
+    in_code_block = False
+    for line in lines:
+        if line.strip().startswith("```"):
+            if not in_code_block:
+                in_code_block = True
+                continue
+            else:
+                in_code_block = False
+                continue
+        else:
+            if in_code_block or not line.strip().startswith("```"):
+                cleaned_lines.append(line)
+    raw_code = "\n".join(cleaned_lines).strip()
+    return raw_code
+
+def extract_raw_commands(text):
+    lines = text.strip().splitlines()
+    commands = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("```") or stripped.startswith("#") or stripped.lower().startswith("please") or stripped.startswith("—"):
+            continue
+        commands.append(stripped)
+    return "\n".join(commands)
+def run_shell_command(command):
+    try:
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        return (result.returncode, result.stdout, result.stderr)
+    except Exception as e:
+        return (1, "", str(e))
+
+
+def clear_history():
+    spinner_stop()
+    if os.path.exists(HISTORY_FILE):
+            os.remove(HISTORY_FILE)
+    print(format_in_box_markdown("[⬢] History cleared! ", color=Fore.CYAN))
+    print("\n\n")
+
+
+def main():
+    args = sys.argv[1:]
+    shell_mode = False
+    only_command = False
+    code_mode = False
+    web_mode = False
+    image_gen = False
+    image_edit = False
+    auto_mode = False
+    video_gen = False
+    interactive_mode = False
+    reset_history_flag = False
+    pentest_agent = False
+    upload_mode = False
+    new_args = []
+    i = 0
+    for arg in args:
+        if arg in ("-r", "--reset"):
+            reset_history_flag = True
+            clear_history()
+        elif arg in ("-u", "--update"):
+            neko_update()
+            sys.exit(0)
+        elif arg in ("-v", "--version"):
+            print("\n" + Fore.GREEN + f"   [ ⚡] v{VERSION} 😼   \n")
+            sys.exit(0)
+        elif arg in ("-h", "--help"):
+            print_help_menu()
+            sys.exit(0)
+        elif arg in ("-s", "--shell"):
+            shell_mode = True
+        elif arg in ("-so", "--shell-only"):
+            shell_mode = True
+            only_command = True
+        elif arg in ("-c", "--code"):
+            code_mode = True
+        elif arg in ("-w", "--web"):
+            web_mode = True
+        elif arg in ("-gv", "--generate-video"):
+            video_gen = True
+            videoprompt_parts = []
+            j = i + 1
+            while j < len(args) and not args[j].startswith('-'):
+                videoprompt_parts.append(args[j])
+                j += 1
+            if not videoprompt_parts:
+                print(f"\n\n{Fore.RED}[!] Error:\n𐰬➤ -g flag requires a prompt for video generation{Style.RESET_ALL}\n\n")
+                sys.exit(1)
+            video_prompt = " ".join(videoprompt_parts)
+        elif arg in ("-g", "--generate"):
+            image_gen = True
+            prompt_parts = []
+            j = i + 1
+            while j < len(args) and not args[j].startswith('-'):
+                prompt_parts.append(args[j])
+                j += 1
+            if not prompt_parts:
+                print(f"\n\n{Fore.RED}[!] Error:\n𐰬➤ -g flag requires a prompt for image generation{Style.RESET_ALL}\n\n")
+                sys.exit(1)
+            image_prompt = " ".join(prompt_parts)
+        elif arg in ("-e", "--edit-image"):
+            image_edit = True
+            if i + 1 >= len(args):
+                print(f"\n\n{Fore.RED}[!] Error:\n𐰬➤ -e flag requires an image path and a prompt for image edition{Style.RESET_ALL}\n\n")
+                sys.exit(1)
+            image_dir = args[i + 1]
+            prompt_parts = []
+            it = i + 2
+            while it < len(args) and not args[it].startswith('-'):
+                prompt_parts.append(args[it])
+                it += 1
+            if not prompt_parts:
+                print(f"\n\n{Fore.RED}[!] Error:\n𐰬➤ -e flag requires a prompt after the image path{Style.RESET_ALL}\n\n")
+                sys.exit(1)
+            edit_prompt = " ".join(prompt_parts)
+        elif arg in ("-f", "--file"):
+            upload_mode = True
+            try:
+                file_path = args[i + 1]
+                i += 1
+
+            except IndexError:
+                print(f"\n\n{Fore.RED}[!] Error:\n𐰬➤ -f flag requires a file path{Style.RESET_ALL}\n\n")
+                sys.exit(1)
+        elif arg in ("-a", "--auto"):
+            auto_mode = True
+        elif arg in ("-i", "--interactive"):
+            interactive_mode = True
+        elif arg in ("-x", "--agent"):
+            pentest_agent = True
+
+        else:
+            new_args.append(arg)
+    args = new_args
+    user_input = " ".join(args).strip()
+
+    if not sys.stdin.isatty():
+        piped_data = sys.stdin.read().strip()
+        if user_input:
+            user_input += "\n\n" + piped_data
+        else:
+            user_input = piped_data
+
+
+#▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+#█ ▄▄█ ██ ▄▄▀█ ▄▄▄█ ▄▄██
+#█ ▄██ ██ ▀▀ █ █▄▀█▄▄▀██
+#█▄███▄▄█▄██▄█▄▄▄▄█▄▄▄██
+#▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    if reset_history_flag:
+        reset_history()
+        sys.exit(0)
+    if not user_input and not interactive_mode:
+        spinner_stop()
+        print_help_menu()
+        sys.exit(0)
+
+    if interactive_mode:
+        spinner_start()
+        history = load_history()
+        if user_input:
+            history.append({"role": "user", "content": user_input})
+
+        # Check if stdin is a TTY. If not (piped), process once and exit.
+        while True:
+            system_prompt = SYSTEM_PROMPT_CHAT
+            messages = history.copy()
+            try:
+                reply = getReply(system_prompt, messages)
+            except Exception as e:
+                reply = f"Error: {e}"
+            spinner_stop()
+            print(format_in_box_markdown(reply))
+            history.append({"role": "assistant", "content": reply})
+            save_history(history)
+            choice = prompt_user_choice(f"${Fore.YELLOW}[N]ew Question\n  [Q]uit\n\n{Fore.CYAN} 𐰬➤ ", {'n', 'q'})
+            if choice == 'q':
+                print(f"\n{Fore.RED}ㅿ 𝙴 𝚡 𝚒 𝚝 𝚒 𝚗 𝚐 . . .\n")
+                break
+            else:
+                print(format_in_box_markdown("Type your question:", color=Fore.YELLOW))
+                try:
+                    with open('/dev/tty', 'r') as tty:
+                        new_q = raw_input("△ New Question: ").strip()
+                except KeyboardInterrupt:
+                    print(f"\n\n{Fore.RED}Process interrupted.")
+                    sys.exit(0)
+                if new_q:
+                    history.append({"role": "user", "content": new_q})
+                else:
+                    print("Empty question, quitting.")
+                    break
+        sys.exit(0)
+    if pentest_agent:
+        spinner_start()
+        if not user_input:
+            print(f"{Fore.RED}🗱 Please provide a starting prompt for agent mode.{Style.RESET_ALL}")
+            sys.exit(1)
+        pentest_agent_mode(user_input)
+        sys.exit(0)
+    if upload_mode:
+        spinner_start()
+        if not user_input:
+            print(f"{Fore.RED}[!] Error:\n𐰬➤ provide a prompt when using -f <file>{Style.RESET_ALL}")
+            sys.exit(1)
+        result = call_api_plain(SYSTEM_PROMPT_CHAT, user_input,upload=True,filePath=file_path)
+        spinner_stop()
+        print(format_in_box_markdown(result))
+        print("\n")
+        sys.exit(0)
+    if video_gen:
+        print(format_in_box_markdown(f"Video will be sent in 5 minutes.\n" ,color=Fore.YELLOW))
+        print(f"    Prompt for video gen:\n {Fore.CYAN}       {video_prompt} \n   ")
+        vidresult = genVideo(video_prompt)
+        print(f"\n{Fore.CYAN}DONE [!]\n  ⬡ Opening video now . . .\n\n")
+        open_file(vidresult)
+        sys.exit(1)
+    if image_gen:
+        print(format_in_box_markdown(f"Image will be sent in 5 minutes.\n",color=Fore.YELLOW))
+        print(f"     Prompt for image gen:\n {Fore.CYAN}       {image_prompt}\n\n")
+        image = genImage(image_prompt)
+        print(f"\n{Fore.CYAN}DONE [!]\n  ⬡ Opening image now . . .\n\n")
+        open_file(image)
+        sys.exit(1)
+    if image_edit:
+        print(format_in_box_markdown(f"Image will be sent in 5 minutes.\n",color=Fore.YELLOW))
+        print(f"    Prompt for image edit:\n {Fore.CYAN}       {edit_prompt}\n")
+        image = editImage(image_dir,edit_prompt)
+        print(f"\n{Fore.CYAN}DONE [!]\n  ⬡ Opening image now . . .\n\n")
+        open_file(image)
+        sys.exit(1)
+
+
+    if auto_mode:
+        spinner_start()
+        if not user_input:
+            print(f"{Fore.RED}Please provide a prompt for autonomous mode (-a).{Style.RESET_ALL}")
+            sys.exit(1)
+        history = load_history()
+        if not history:
+            history = [{"role": "assistant", "content": PENTEST_AGENT_SYSTEM_PROMPT}]
+            history.append({"role": "user", "content": user_input})
+        else:
+            if history[-1]["role"] == "assistant":
+                history.append({"role": "user", "content": user_input})
+
+        while True:
+            assistant_full = pentest_call(history)
+            if not assistant_full:
+                break
+            spinner_stop()
+            print(format_in_box_markdown(assistant_full, color=Fore.RED))
+            history.append({"role": "assistant", "content": assistant_full})
+            commands_only = pentest_call([
+                {"role": "assistant", "content": assistant_full + '\n\n' + PENTEST_AGENT_COMMANDS_EXTRACT_PROMPT},
+            ]) or ""
+            raw_commands = extract_raw_commands(commands_only)
+            if raw_commands.strip():
+                print(format_in_box_markdown(raw_commands, color=Fore.GREEN))
+                history.append({"role": "assistant", "content": raw_commands})
+            choice = prompt_user_choice(f"{Fore.YELLOW}--[ [R]un | [N]ew | [A]sk | [Q]uit ]--\n\n{Fore.CYAN} 𐰬➤ ", {'r', 'n', 'a', 'q'})
+            if choice == 'r':
+                lines = [line.strip() for line in raw_commands.splitlines() if line.strip()]
+                if not lines:
+                    print(f"{Fore.RED}No commands to run.{Style.RESET_ALL}")
+                    continue
+                log_file = os.path.join(tempfile.gettempdir(), "NekoLogs.txt")
+                with open(log_file, "w", encoding="utf-8") as logf:
+                    for cmd in lines:
+                        print(f"{Fore.GREEN}Running: {cmd}{Style.RESET_ALL}")
+                        retcode, out, err = run_shell_command(cmd)
+                        logf.write(f"$ {cmd}\n")
+                        logf.write(out)
+                        logf.write(err)
+                        logf.write("\n\n")
+                        print(out)
+                        if retcode != 0:
+                            print(f"{Fore.RED}Command exited with code {retcode}{Style.RESET_ALL}")
+                with open(log_file, "r", encoding="utf-8") as logf:
+                    logs_content = logf.read()
+                last_assistant_msg = None
+                for msg in reversed(history):
+                    if msg["role"] == "assistant":
+                        last_assistant_msg = msg["content"]
+                        break
+                history.append({"role": "assistant", "content": f"Command outputs:\n{logs_content}"})
+                history.append({"role": "assistant", "content": last_assistant_msg if last_assistant_msg else ""})
+                new_analysis = pentest_call(history)
+                if not new_analysis:
+                    continue
+                print(format_in_box_markdown(new_analysis, color=Fore.RED))
+                history.append({"role": "assistant", "content": new_analysis})
+                new_commands = pentest_call([
+                    {"role": "assistant", "content": new_analysis + '\n\n' + PENTEST_AGENT_COMMANDS_EXTRACT_PROMPT},
+                ]) or ""
+                if new_commands.strip():
+                    print(format_in_box_markdown(new_commands, color=Fore.GREEN))
+                    history.append({"role": "assistant", "content": new_commands})
+                save_history(history)
+                continue
+            elif choice == 'n':
+                last_user_idx = None
+                for i in reversed(range(len(history))):
+                    if history[i]["role"] == "user":
+                        last_user_idx = i
+                        break
+                if last_user_idx is None:
+                    print(f"{Fore.RED}No user message found to regenerate.{Style.RESET_ALL}")
+                    continue
+                history = history[:last_user_idx + 1]
+                user_input = history[last_user_idx]["content"]
+                try:
+                    headers = {"Content-Type": "application/json"}
+                    data = {"messages": history}
+                    for attempt in range(MAX_RETRIES):
+                        try:
+                            r = requests.post(BASE_URL, headers=headers, json=data, timeout=60)
+                            if r.status_code == 429:
+                                time.sleep(RETRY_DELAY)
+                                continue
+                            r.raise_for_status()
+                            response_json = r.json()
+                            if 'error' in response_json:
+                                error_message = response_json['error'].get('message', '')
+                                if "most wanted" in error_message or "Rate limit" in error_message:
+                                    time.sleep(RETRY_DELAY)
+                                    continue
+                                else:
+                                    continue
+                            response = response_json.get("response")
+                            if response:
+                                regenerated_response = response
+                                break
+                        except (requests.exceptions.HTTPError, requests.exceptions.RequestException, json.JSONDecodeError):
+                            if attempt < MAX_RETRIES - 1:
+                                time.sleep(RETRY_DELAY)
+                            continue
+                    regenerated_response = regenerated_response if 'regenerated_response' in locals() else "[ <!> Error with response, please try again ]"
+                except Exception as e:
+                    regenerated_response = f"Error: {e}"
+                print(format_in_box_markdown(regenerated_response, color=Fore.RED))
+                history.append({"role": "assistant", "content": regenerated_response})
+                save_history(history)
+                continue
+            elif choice == 'a':
+                print(format_in_box_markdown("Ask your question:", color=Fore.CYAN))
+                try:
+                    new_q = raw_input("△ Question: ").strip()
+                except KeyboardInterrupt:
+                    print(f"\n\n{Fore.RED}Process interrupted.")
+                    sys.exit(0)
+                if not new_q:
+                    print(f"{Fore.RED}Empty input, returning to main loop.{Style.RESET_ALL}")
+                    continue
+                last_assistant_msg = None
+                last_commands = None
+                for i in reversed(range(len(history))):
+                    if history[i]["role"] == "assistant":
+                        if last_commands is None:
+                            last_commands = history[i]["content"]
+                        elif last_assistant_msg is None:
+                            last_assistant_msg = history[i]["content"]
+                            break
+                if last_assistant_msg is None:
+                    last_assistant_msg = "[No previous assistant message]"
+                if last_commands is None:
+                    last_commands = "[No previous commands]"
+                composed_prompt = (
+                    f"{last_assistant_msg}\n\n"
+                    f"{last_commands}\n\n"
+                    f"My question now is: {new_q}"
+                )
+                history.append({"role": "user", "content": composed_prompt})
+                try:
+                    headers = {"Content-Type": "application/json"}
+                    data = {"messages": history}
+                    for attempt in range(MAX_RETRIES):
+                        try:
+                            r = requests.post(BASE_URL, headers=headers, json=data, timeout=60)
+                            if r.status_code == 429:
+                                time.sleep(RETRY_DELAY)
+                                continue
+                            r.raise_for_status()
+                            response_json = r.json()
+                            if 'error' in response_json:
+                                error_message = response_json['error'].get('message', '')
+                                if "most wanted" in error_message or "Rate limit" in error_message:
+                                    time.sleep(RETRY_DELAY)
+                                    continue
+                                else:
+                                    continue
+
+
+                            response = response_json.get("response")
+                            if response:
+                                answer = response
+                                break
+
+
+                        except (requests.exceptions.HTTPError, requests.exceptions.RequestException, json.JSONDecodeError):
+                            if attempt < MAX_RETRIES - 1:
+                                time.sleep(RETRY_DELAY)
+                            continue
+                    answer = answer if 'answer' in locals() else "[ <!> Error with response, please try again ]"
+                except Exception as e:
+                    answer = f"Error: {e}"
+                print(format_in_box_markdown(answer, color=Fore.RED))
+                history.append({"role": "assistant", "content": answer})
+                save_history(history)
+                continue
+            else:
+                print(format_in_box_markdown(f"\n\n{Fore.YELLOW}ㅿ 𝙴 𝚡 𝚒 𝚝 𝚒 𝚗 𝚐..."))
+                clear_history()
+                sys.exit(0)
+
+    if shell_mode:
+        spinner_start()
+        while True:
+            user_input_str = clean_shell_input(str(user_input))
+            if not only_command:
+                description = call_api_plain(SYSTEM_PROMPT_SHELL_DESCRIPTION, user_input_str)
+                spinner_stop()
+                print("\n" + format_in_box_markdown(description, color=Fore.RED) + "\n")
+            spinner_start()
+            command = call_api_plain(SYSTEM_PROMPT_SHELL_COMMAND, user_input_str)
+            command = command.strip()
+            spinner_stop()
+            print(format_in_box_markdown(command, color=Fore.GREEN) + "\n")
+
+            choice = prompt_user_choice(f"{Fore.YELLOW}--[ [E]xecute | [R]emake | [A]bort ]--\n\n{Fore.CYAN} 𐰬➤ ", {'e', 'r', 'a'})
+            if choice == 'e':
+                print(f"{Fore.GREEN}Executing command...{Style.RESET_ALL}")
+                try:
+                    subprocess.run(command, shell=True, check=True)
+                except subprocess.CalledProcessError as e:
+                    print(f"{Fore.RED}Command failed with exit code {e.returncode}{Style.RESET_ALL}")
+                break
+            elif choice == 'r':
+                continue
+            else:
+                print(format_in_box_markdown(f"\n\n{Fore.YELLOW}ㅿ 𝙰 𝚋 𝚘 𝚛 𝚝 𝚎 𝚍  /  𝚋 𝚢 /  𝚞 𝚜 𝚎 𝚛  . . . "))
+                break
+
+
+    elif code_mode:
+        spinner_start()
+        while True:
+            unformattedCode = call_api_plain(SYSTEM_PROMPT_CODE_RAW, user_input, use_web=web_mode)
+            raw_code = extract_raw_code(unformattedCode)
+            spinner_stop()
+            print(format_in_box_markdown(raw_code, color=Fore.GREEN) + "\n")
+
+            choice = prompt_user_choice(f"{Fore.YELLOW}--[ [S]ave | [N]ew | [Q]uit ]--\n\n{Fore.CYAN} 𐰬➤ ", {'s', 'n', 'q'})
+
+            if choice == 's':
+                filename = prompt_filename()
+                if filename:
+                    try:
+                        with open(filename, 'w', encoding='utf-8') as f:
+                            f.write(raw_code)
+                        print(f"{Fore.GREEN}Code saved to '{filename}'{Style.RESET_ALL}")
+                    except Exception as e:
+                        print(f"{Fore.RED}Failed to save file: {e}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.YELLOW}Save operation cancelled.{Style.RESET_ALL}")
+                break
+
+            elif choice == 'n':
+                continue
+            else:
+                print(format_in_box_markdown(f"\n\n{Fore.YELLOW}ㅿ 𝙴 𝚡 𝚒 𝚝 𝚒 𝚗 g... "))
+                break
+
+    else:
+        spinner_start()
+        while True:
+
+            system_prompt = SYSTEM_PROMPT_CHAT
+            response = call_api_plain(system_prompt, user_input, use_web=web_mode)
+            spinner_stop()
+            print(format_in_box_markdown(response))
+            print("\n\n")
+            break
+
+if __name__ == "__main__":
+    checkupdts()
+    main()
