@@ -125,6 +125,6 @@ So I decided to make my own CLI assistant using my own server for Free GPT 5-1 w
 <strong>Hack the world. Byte by Byte.</strong> ⛛ <br>
 𝝺𝗿𝗰𝗮𝗻𝗴𝗲𝗹𝗼 @ 2025
 
-**[[ꋧ]](#About)**
+**[[ꋧ]](#-𝗔𝗯𝗼𝘂𝘁-𝗡𝗘𝗞𝗢))**
 
 </div>
